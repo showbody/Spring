@@ -14,5 +14,7 @@ public class AppConfigTest06 {
         for (String n:names){
             System.out.println(n);
         }
+
+//        System.getenv();
     }
 }

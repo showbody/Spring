@@ -1,1 +1,7 @@
-17:21:04.168 INFO  org.ycframework.context.YcAnnotationConfigApplicationContext 35 <init> - com.yc.MyConfig类上有@YcComponentScan注解，它要扫描的路径:com.yc
+11:51:07.110 INFO  org.ycframework.context.YcAnnotationConfigApplicationContext 43 <init> - com.yc.MyConfig类上有@YcComponentScan注解，它要扫描的路径:com.yc
+11:51:07.116 TRACE org.ycframework.context.YcAnnotationConfigApplicationContext 134 recursiveLoadBeanDefinition - 当前正在递归:/D:/ideaProject/Spring/selfSpring/target/classes/com/yc
+11:51:07.118 TRACE org.ycframework.context.YcAnnotationConfigApplicationContext 178 findPackageClasses - 递归:D:\ideaProject\Spring\selfSpring\target\classes\com\yc\dao它对应的包名com.yc
+11:51:07.129 INFO  org.ycframework.context.YcAnnotationConfigApplicationContext 189 findPackageClasses - 加载到一个待托管的类:com.yc.dao.UserDaoImpl
+11:51:07.131 INFO  org.ycframework.context.YcAnnotationConfigApplicationContext 246 getBeanId - typename为:UserDaoImpl
+11:51:07.132 TRACE org.ycframework.context.YcAnnotationConfigApplicationContext 178 findPackageClasses - 递归:D:\ideaProject\Spring\selfSpring\target\classes\com\yc\service它对应的包名com.yc
+11:51:07.139 INFO  org.ycframework.context.YcAnnotationConfigApplicationContext 189 findPackageClasses - 加载到一个待托管的类:com.yc.service.UserBizImpl
