@@ -2,7 +2,7 @@ package com.yc.dao;
 
 import org.ycframework.annotation.YcRepository;
 
-@YcRepository
+@YcRepository//"userDaoImpl"->对象
 public class UserDaoImpl implements UserDao {
     @Override
     public void add(String uname) {

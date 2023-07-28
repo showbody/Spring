@@ -13,10 +13,11 @@ import java.util.*;
 public class YcAnnotationConfigApplicationContext implements YcApplicationContext{
 
     private Logger logger  = LoggerFactory.getLogger(YcAnnotationConfigApplicationContext.class);
-
+    //存每个待托管的Bean的定义信息
     private Map<String, YcBeanDefinition> beanDefinitionMap = new HashMap<>();
+    //存每个实例化后的Bean
     private Map<String,Object> beanMap = new HashMap<>();
-
+    //存系统属性 db.properties
     private Properties pros;
 
 
@@ -34,6 +35,7 @@ public class YcAnnotationConfigApplicationContext implements YcApplicationContex
            //扫描配置类上的@YcComponentScan注解 读取要扫描的包
 //           logger.info("cls为:"+cls);
            if (cls.isAnnotationPresent(YcComponentScan.class)){
+               //此配置上有@YcComponentScan注解 读取要扫描的包
                YcComponentScan ycConponentScan = (YcComponentScan) cls.getAnnotation(YcComponentScan.class);
                basePackages = ycConponentScan.basePackages();
                if (basePackages==null||basePackages.length<=0) {
@@ -42,11 +44,12 @@ public class YcAnnotationConfigApplicationContext implements YcApplicationContex
                }
                    logger.info(cls.getName()+"类上有@YcComponentScan注解，它要扫描的路径:"+basePackages[0]);
            }
-           //开始扫描这些basePackages包下的bean 并加载包装成YcBeanDefinition对象
+           //开始扫描这些basePackages包下的bean 并加载包装成YcBeanDefinition对象  存到beanDinifitionMap
            recursiveLoadBeanDefinition(basePackages);
        }
-       //循环beanDefinitionMap，创建bean  存到beanMap
+       //循环beanDefinitionMap，创建bean(是否为懒加载，是单例)  存到beanMap
            createBean();
+       //循环所有托管的beanMap中的bean，看属性和方法上是否有@Autowired,@Resource,@Value  考虑di
             doDi();
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
@@ -57,24 +60,26 @@ public class YcAnnotationConfigApplicationContext implements YcApplicationContex
         }
 
     }
-
+    //开始扫描这些basePackages包下的bean 并加载包装成YcBeanDefinition对象  存到beanDinifitionMap
     private void doDi() throws IllegalAccessException, InstantiationException, ClassNotFoundException {
         //循环的是beanMap 这是托管bean
         for (Map.Entry<String,Object> entry:beanMap.entrySet()){
             String beanId = entry.getKey();
             Object beanObj = entry.getValue();
             //有三种情况
+            //1.属性上有@YcResource注解的情况
+            //2.方法上有@YcResource注解的情况
+            //3.构造方法上有@YcResource注解的情况  下面是第一种情况
             Field[] fields = beanObj.getClass().getDeclaredFields();
             for (Field field:fields){
                 if (field.isAnnotationPresent(YcResource.class)){
                     YcResource ycResource = field.getAnnotation(YcResource.class);
                     String toDiBeanId = ycResource.name();
-                    //从beanMap 中找  是否singleton lazy
+                    //从beanMap 中找  是否singleton 是否lazy
                     Object obj = getToDiBean(toDiBeanId);
                     //注入
-                    field.setAccessible(true);
-
-                    field.set(beanObj,obj);
+                    field.setAccessible(true);//因为属性是private的，所以要将它accessible设为true
+                    field.set(beanObj,obj);//userBizImpl.userDao = userDaoImpl
                 }
             }
         }
@@ -82,6 +87,7 @@ public class YcAnnotationConfigApplicationContext implements YcApplicationContex
 
     }
 
+  //从beanMap 中找  是否singleton 是否lazy
     private Object getToDiBean(String toDiBeanId) throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         if (beanMap.containsKey(toDiBeanId)){
            return beanMap.get(toDiBeanId);
@@ -92,30 +98,33 @@ public class YcAnnotationConfigApplicationContext implements YcApplicationContex
         }
         YcBeanDefinition bd=  beanDefinitionMap.get(toDiBeanId);
         if (bd.isLazy()){
+            //是因为lazy,所以没有托管
             String classPath = bd.getClassInfo();
             Object beanObj = Class.forName(classPath).newInstance();
             beanMap.put(toDiBeanId,beanObj);
             return beanObj;
         }
 
+        //是否因为prototype
         if (bd.getScope().equalsIgnoreCase("prototype")){
             String classPath = bd.getClassInfo();
             Object beanObj = Class.forName(classPath).newInstance();
-//            beanMap.put(toDiBeanId,beanObj);原型模式下  每次getBean在创建一次
+//            beanMap.put(toDiBeanId,beanObj);原型模式下  每次getBean在创建一次 所以beanMap不存
             return beanObj;
         }
         return null;
     }
 
+    //循环beanDefinitionMap，创建bean(是否为懒加载，是单例)  存到beanMap
     private void createBean() throws ClassNotFoundException, IllegalAccessException, InstantiationException {
         for (Map.Entry<String,YcBeanDefinition> entry:beanDefinitionMap.entrySet()){
             String beanId = entry.getKey();
             YcBeanDefinition ybd = entry.getValue();
-            if (!ybd.isLazy()&&ybd.getScope().equalsIgnoreCase("prototype")){
+            if (!ybd.isLazy()&&!ybd.getScope().equalsIgnoreCase("prototype")){
                 String classInfo = ybd.getClassInfo();
                 Object obj = Class.forName(classInfo).newInstance();
                 beanMap.put(beanId,obj);
-                logger.trace("spring容器"+beanId+"=>"+classInfo);
+                logger.trace("spring容器托管了"+beanId+"=>"+classInfo);
 
             }
         }

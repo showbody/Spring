@@ -11,6 +11,6 @@
 
     <artifactId>selfSpring</artifactId>
 
-    <!--自动继承父模块的依赖-->
+    <!--在子模块selfspring中会自动继承父项目pom.xml中声明的dependency-->
 
 </project>

@@ -8,7 +8,7 @@
     <artifactId>Spring</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
-    <!--子模块-->
+    <!--当前这个项目下的子模块列表-->
     <modules>
         <module>selfSpring</module>
     </modules>

@@ -12,5 +12,7 @@ public class commonTest {
     public static void main(String[] args) {
         ApplicationContext ac = new AnnotationConfigApplicationContext(commonTest.class);
         ((AnnotationConfigApplicationContext)ac).close();
+
+
     }
 }
