@@ -197,7 +197,11 @@ public class YcAnnotationConfigApplicationContext implements YcApplicationContex
                             ||cls.isAnnotationPresent(YcService.class)){
                         logger.info("加载到一个待托管的类:" + cls.getName());
                         YcBeanDefinition bd = new YcBeanDefinition();
-                        if (cls.isAnnotationPresent(YcLazy.class)){
+
+                        if(cls.isAnnotationPresent(YcLazy.class)){
+                            bd.setLazy(true);
+                        }
+                        if (cls.isAnnotationPresent(YcScope.class)){
                             YcScope ycScope = (YcScope) cls.getAnnotation(YcScope.class);
                             String scope = ycScope.value();
                             bd.setScope(scope);
@@ -261,6 +265,43 @@ public class YcAnnotationConfigApplicationContext implements YcApplicationContex
 
     @Override
     public Object getBean(String beanid) {
+        YcBeanDefinition bd = this.beanDefinitionMap.get(beanid);
+        if(bd==null){
+            throw new RuntimeException("容器中没有加载此Bean");
+        }
+        String scope = bd.getScope();
+        if("prototype".equalsIgnoreCase(scope)){
+            Object obj = null;
+            try {
+                obj= Class.forName(bd.getClassInfo()).newInstance();
+                return obj;
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+        }
+        if(this.beanMap.containsKey(beanid)){
+            return this.beanMap.get(beanid);
+        }
+        if(bd.isLazy()){
+            Object obj = null;
+            try {
+                obj= Class.forName(bd.getClassInfo()).newInstance();
+                this.beanMap.put(beanid,obj);
+                return obj;
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            } catch (ClassNotFoundException e) {
+                e.printStackTrace();
+            }
+            return obj;
+        }
+
         return null;
     }
 }

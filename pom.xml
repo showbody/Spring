@@ -11,6 +11,7 @@
     <!--当前这个项目下的子模块列表-->
     <modules>
         <module>selfSpring</module>
+        <module>AOP</module>
     </modules>
 
     <!--全局属性定义 -->
@@ -30,7 +31,7 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-test</artifactId>
-            <version>5.3.24</version>
+            <version>5.3.13</version>
         </dependency>
 
         <dependency>
@@ -42,12 +43,12 @@
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-core</artifactId>
-            <version>5.3.24</version>
+            <version>5.3.13</version>
         </dependency>
         <dependency>
             <groupId>org.springframework</groupId>
             <artifactId>spring-context</artifactId>
-            <version>5.3.24</version>
+            <version>5.3.13</version>
         </dependency>
         <dependency>
             <groupId>org.projectlombok</groupId>

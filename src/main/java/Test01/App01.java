@@ -11,5 +11,9 @@ public class App01 {
         UserBiz ub = (UserBiz) ac.getBean("userBizImpl");
         ub.add("zs");
         System.out.println();
+        String [] names = ac.getBeanDefinitionNames();
+        for (String n:names){
+            System.out.println(n);
+        }
     }
 }
