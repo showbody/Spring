@@ -11,7 +11,7 @@ public class Test {
 
         //生成的代理类
         Object proxy = handler.createProxy();
-        System.out.println(proxy);
+//        System.out.println(proxy);
 
         Stu s = (Stu) proxy;
         s.add("zzz");

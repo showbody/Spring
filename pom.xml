@@ -12,6 +12,7 @@
     <modules>
         <module>selfSpring</module>
         <module>AOP</module>
+        <module>springproxy</module>
     </modules>
 
     <!--全局属性定义 -->

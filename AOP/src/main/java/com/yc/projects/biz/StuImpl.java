@@ -1,5 +1,8 @@
 package com.yc.projects.biz;
 
+import org.springframework.stereotype.Component;
+
+@Component
 public class StuImpl implements Stu {
     @Override
     public void  add(String name){

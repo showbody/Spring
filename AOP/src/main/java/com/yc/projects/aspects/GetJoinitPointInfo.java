@@ -7,7 +7,6 @@ import org.aspectj.lang.annotation.Pointcut;
 //@Component
 //@Aspect
 public class GetJoinitPointInfo {
-
     @Pointcut("execution(* com.yc.projects.biz..*(..))")
     private void abc(){}
 
@@ -21,6 +20,7 @@ public class GetJoinitPointInfo {
         if (objects!=null&objects.length>0){
             for (Object o:objects){
                 System.out.println(o);
+
             }
         }
     }

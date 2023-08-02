@@ -9,6 +9,7 @@
         <outputRelativeToContentRoot value="true" />
         <module name="AOP" />
         <module name="selfSpring" />
+        <module name="springproxy" />
       </profile>
     </annotationProcessing>
   </component>

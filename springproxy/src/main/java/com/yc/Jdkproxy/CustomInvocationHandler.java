@@ -1,4 +1,4 @@
-package com.yc.projects.proxy;
+package com.yc.Jdkproxy;
 
 import java.lang.reflect.InvocationHandler;
 import java.lang.reflect.Method;
@@ -16,7 +16,8 @@ public class CustomInvocationHandler implements InvocationHandler {
     //生成代理  对象的方法
     public Object createProxy(){
         //jdk中提供了Proxy，有一个方法专门用于根据接口生成代理类对象的方法
-        Object proxy = Proxy.newProxyInstance(CustomInvocationHandler.class.getClassLoader(), target.getClass().getInterfaces(), this);
+        Object proxy = Proxy.newProxyInstance(CustomInvocationHandler.class.getClassLoader(),
+                target.getClass().getInterfaces(), this);
         return proxy;
     }
 
@@ -28,10 +29,10 @@ public class CustomInvocationHandler implements InvocationHandler {
      * @return
      * @throws Throwable
      */
+    //当在主程序中调用生成的Proxy的中的方法  会自动回调这个invoke()，在这个invoke加入增强  切面的功能
     @Override
     public Object invoke(Object proxy, Method method, Object[] args) throws Throwable {
-//        System.out.println(method.getName());
-       if (method.getName().indexOf("add")>=0){//切入点表达式
+       if (method.getName().startsWith("add")){
            showTime();
        }
        //反射机制调用目标类的目标方法
