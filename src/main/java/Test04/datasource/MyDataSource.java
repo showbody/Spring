@@ -21,7 +21,7 @@ public class MyDataSource implements DataSource {
     @Value("${coreSize}")
     private int coreSize;
 
-    @Value("${user}")
+    @Value("${ycuser}")
     private String user;
 
     @Value("${password}")

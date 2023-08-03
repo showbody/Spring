@@ -10,6 +10,7 @@
         <module name="AOP" />
         <module name="selfSpring" />
         <module name="springproxy" />
+        <module name="txbank" />
       </profile>
     </annotationProcessing>
   </component>
